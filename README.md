@@ -1,1 +1,1 @@
-TASK-BOT
+TASK-BOT 1.0
