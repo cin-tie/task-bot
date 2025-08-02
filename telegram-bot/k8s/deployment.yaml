@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: telegram-bot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: telegram-bot
+  template:
+    metadata:
+      labels:
+        app: telegram-bot
+    spec:
+      containers:
+      - name: telegram-bot
+        image: telegram-bot:latest
+        imagePullPolicy: Never
+        envFrom:
+        - configMapRef:
+            name: telegram-bot-config
+        - secretRef:
+            name: telegram-bot-secrets
+        resources:
+          limits:
+            cpu: "500m"
+            memory: "512Mi"
