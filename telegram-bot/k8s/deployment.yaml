@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: telegram-bot
+  labels:
+    app: telegram-bot
 spec:
   replicas: 1
   selector:
@@ -16,12 +18,22 @@ spec:
       - name: telegram-bot
         image: telegram-bot:latest
         imagePullPolicy: Never
-        envFrom:
-        - configMapRef:
-            name: telegram-bot-config
-        - secretRef:
-            name: telegram-bot-secrets
+        env:
+        - name: TELEGRAM_BOT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: telegram-secrets
+              key: BOT_TOKEN
+        - name: AUTH_SERVICE_URL
+          value: "http://auth-service:3000"
+        - name: NODE_ENV
+          value: "production"
+        - name: LOG_LEVEL
+          value: "INFO"
         resources:
           limits:
             cpu: "500m"
-            memory: "512Mi"
+            memory: "256Mi"
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
